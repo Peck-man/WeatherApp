@@ -1,13 +1,11 @@
 package com.example.weatherapp.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 
-@Entity @Data @AllArgsConstructor @RequiredArgsConstructor
+@Entity @Data @NoArgsConstructor
 public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,6 +13,10 @@ public class City {
     private String cityName;
     private Integer lat;
     private Integer lon;
-    @ManyToMany
-    private ArrayList<AppUser> userList = new ArrayList<>();
+
+    public City(String cityName, Integer lat, Integer lon) {
+        this.cityName = cityName;
+        this.lat = lat;
+        this.lon = lon;
+    }
 }
