@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @NoArgsConstructor
-public class UsernameAndPasswordAuthentiacationRequest {
+public class UsernameAndPasswordAuthenticationRequest {
     private String username, password;
 
 }
