@@ -2,19 +2,20 @@ package com.example.weatherapp.authentication;
 
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+
+import static com.example.weatherapp.service.UserRoles.ADMIN;
+import static com.example.weatherapp.service.UserRoles.USER;
 
 @Repository("mysql")
 @RequiredArgsConstructor
 public class FakeUserDaoRepository implements UserDAO {
-
+    @Autowired
     private final PasswordEncoder passwordEncoder;
 
 
@@ -27,12 +28,27 @@ public class FakeUserDaoRepository implements UserDAO {
 
     private List<UserDAOModel> getUsers() {
         return Lists.newArrayList(
-                new UserDAOModel("John", passwordEncoder().encode("John1234"), new Set<GrantedAuthority>())
-        )
-    }
-}
-                /*userService.saveAppUser(new AppUser(,));
-		userService.saveAppUser(new AppUser("Simon", "John2345"));
-		userService.saveAppUser(new AppUser("Martin", "John3456"));
+                new UserDAOModel("Simon",
+                        passwordEncoder.encode("John1234"),
+                        ADMIN.GetGrantedAuthorities(),
+                        true,
+                        true,
+                        true,
+                        true),
+                new UserDAOModel("Emily",
+                        passwordEncoder.encode("John1234"),
+                        USER.GetGrantedAuthorities(),
+                        true,
+                        true,
+                        true,
+                        true),
+                new UserDAOModel("Natalia",
+                        passwordEncoder.encode("John1234"),
+                        USER.GetGrantedAuthorities(),
+                        true,
+                        true,
+                        true,
+                        true)
+        );
     }
 }
