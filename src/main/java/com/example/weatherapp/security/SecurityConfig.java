@@ -1,6 +1,7 @@
 package com.example.weatherapp.security;
 
 import com.example.weatherapp.filter.JwtUsernameAndPasswordAuthFilter;
+import com.example.weatherapp.jwt.JwtTokenVerifier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,9 +28,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and()
                 .addFilter(new JwtUsernameAndPasswordAuthFilter(authenticationManager()))
+                .addFilterAfter(new JwtTokenVerifier(), JwtUsernameAndPasswordAuthFilter.class)
                 .authorizeRequests()
-                .antMatchers("/login/**") // - se kterými endpointy chci něco udělat
-                .permitAll() // - co s nimi chci udělat
+                .antMatchers("/login/**")
+                .permitAll()
                 .anyRequest()
                 .authenticated();
     }
