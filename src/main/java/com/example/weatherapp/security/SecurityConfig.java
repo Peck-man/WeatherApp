@@ -27,7 +27,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and()
                 .addFilter(new JwtUsernameAndPasswordAuthFilter(authenticationManager()))
-                .authorizeRequests().anyRequest().permitAll();
+                .authorizeRequests()
+                .antMatchers("/login/**") // - se kterými endpointy chci něco udělat
+                .permitAll() // - co s nimi chci udělat
+                .anyRequest()
+                .authenticated();
     }
 
     @Override
