@@ -14,23 +14,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
-public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class JwtUsernameAndPasswordAuthFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager){
+    public JwtUsernameAndPasswordAuthFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        // tady si vytahuje parametry z requestu při každém pokusu o login
-        // při úspěšném pokusu posouvá dál na successfulAuthentication
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        log.info("Username is: {}", username);
-        log.info("Password is: {}", password);
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,password);
-        return  authenticationManager.authenticate(authenticationToken);
+        try {
+            UsernameAnd
+        } catch () {
+
+        }
     }
 
     @Override

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -14,8 +15,15 @@ import java.util.List;
 public class MainController {
     private final UserService userService;
     @GetMapping("/users")
-    public ResponseEntity<List<City>> getAll(){
-        return ResponseEntity.ok().body(userService.getCitiesOfTheUser(1L));
+    @ResponseBody
+    public String getAll(){
+        return  "this page can reach everyone";
+    }
+
+    @GetMapping("/admin")
+    @ResponseBody
+    public String getAdminHomepage() {
+        return "this page can reach only admin";
     }
 
 }
