@@ -85,7 +85,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     public String getUsernameFromToken(String token) {
          token = token.replace("Bearer ", "");
-        System.out.println(token);
         Jws<Claims> claimsJws = Jwts.parser()
                 .setSigningKey(Keys.hmacShaKeyFor("hellohellohellohellohellohellohellohellohellohellohellohellohello".getBytes()))
                 .parseClaimsJws(token);
