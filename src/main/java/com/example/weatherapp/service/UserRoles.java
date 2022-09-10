@@ -26,7 +26,7 @@ public enum UserRoles {
     public Set<SimpleGrantedAuthority> GetGrantedAuthorities() {
         Set<SimpleGrantedAuthority> permissions = getPermissions().stream().map(userPermissions ->
                 new SimpleGrantedAuthority(userPermissions.getPermission())).collect(Collectors.toSet());
-        permissions.add(new SimpleGrantedAuthority("ROLE"+ this.name()));
+        permissions.add(new SimpleGrantedAuthority("ROLE_"+ this.name()));
         return permissions;
     }
 }

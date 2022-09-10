@@ -4,14 +4,20 @@ import com.example.weatherapp.models.AppUser;
 import com.example.weatherapp.models.City;
 import com.example.weatherapp.repo.CityRepo;
 import com.example.weatherapp.repo.UserRepo;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -72,11 +78,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<City> getCitiesOfTheUser(Long userId) {
-        log.info("Fetching all cities of user with id {}", userId);
-
-        return userRepo.findById(userId).get().getCities();
+    public List<City> getCitiesOfTheUser(String token) {
+        String username = getUsernameFromToken(token);
+        return userRepo.findByUsername(username).getCities();
     }
 
+    public String getUsernameFromToken(String token) {
+         token = token.replace("Bearer ", "");
+        System.out.println(token);
+        Jws<Claims> claimsJws = Jwts.parser()
+                .setSigningKey(Keys.hmacShaKeyFor("hellohellohellohellohellohellohellohellohellohellohellohellohello".getBytes()))
+                .parseClaimsJws(token);
+        Claims body = claimsJws.getBody();
+        String username = body.getSubject();
+        return username;
+    }
 
 }
