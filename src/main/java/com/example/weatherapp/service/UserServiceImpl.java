@@ -9,20 +9,18 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Service  @Transactional @Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -57,22 +55,36 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public City saveCity(City city) {
-        log.info("Saving new user {} to the database", city.getCityName());
-
-        return cityRepo.save(city);
+        if (cityRepo.existsByCityName(city.getCityName())) {
+            return cityRepo.findByCityName(city.getCityName());
+        }
+        cityRepo.save(city);
+        return city;
     }
 
     @Override
-    public void addCityToUser(String username, String cityName) {
-        log.info("Adding city {} to user {}", cityName,username);
-        AppUser appUser = userRepo.findByUsername(username);
-        City city = cityRepo.findByCityName(cityName);
-        appUser.getCities().add(city);
+    public void addCityToUser(String token, City city) {
+        AppUser appUser = userRepo.findByUsername(getUsernameFromToken(token));
+        if (!hasUserCity(appUser, city)){
+            appUser.getCities().add(city);
+        }
+
+
+    }
+
+    public boolean hasUserCity(AppUser appUser, City city){
+        boolean hasIt = false;
+        for (int i = 0; i < appUser.getCities().size(); i++) {
+            if (Objects.equals(appUser.getCities().get(i).getId(), city.getId())) {
+                hasIt = true;
+                break;
+            }
+        }
+        return hasIt;
     }
 
     @Override
     public AppUser getUser(String username) {
-        log.info("Fetching user {}", username);
 
         return userRepo.findByUsername(username);
     }
@@ -89,8 +101,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .setSigningKey(Keys.hmacShaKeyFor("hellohellohellohellohellohellohellohellohellohellohellohellohello".getBytes()))
                 .parseClaimsJws(token);
         Claims body = claimsJws.getBody();
-        String username = body.getSubject();
-        return username;
+        return body.getSubject();
     }
 
 }

@@ -10,11 +10,13 @@ import java.util.List;
 @Entity @Data @NoArgsConstructor
 public class AppUser {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "appGenerator", sequenceName = "APPUSER_SEQUENCE", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appGenerator")
     private Long id;
     private String username;
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER,
+    cascade = CascadeType.ALL)
     private List<City> cities;
 
     public AppUser(String username, String password) {

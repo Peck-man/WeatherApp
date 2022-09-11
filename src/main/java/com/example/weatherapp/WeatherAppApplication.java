@@ -17,6 +17,7 @@ import java.util.List;
 @SpringBootApplication
 @AllArgsConstructor
 public class WeatherAppApplication implements CommandLineRunner {
+
 	private UserService userService;
 	private PasswordEncoder passwordEncoder;
 
@@ -34,8 +35,5 @@ public class WeatherAppApplication implements CommandLineRunner {
 		userService.saveCity(new City("Benešov", 50, 60));
 		userService.saveCity(new City("Vlašim", 70, 80));
 		userService.saveCity(new City("Bystřice", 30, 40));
-		userService.addCityToUser("John", "Benešov");
-		userService.addCityToUser("Simon", "Vlašim");
-		userService.addCityToUser("Simon", "Bystřice");
 	}
 }
