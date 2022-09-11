@@ -1,5 +1,7 @@
 package com.example.weatherapp.authentication;
 
+import com.example.weatherapp.models.AppUser;
+import com.example.weatherapp.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class UserDAOService implements UserDetailsService {
 
     private final UserDAO userDAO;
+    private final UserRepo userRepo;
     @Override
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
