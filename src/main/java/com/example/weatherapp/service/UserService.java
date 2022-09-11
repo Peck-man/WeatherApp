@@ -9,6 +9,7 @@ public interface UserService {
     AppUser saveAppUser(AppUser appUser);
     City saveCity(City city);
     void addCityToUser(String username, City city);
+    String deleteCityOfUser(String token, Integer idOfCity);
     AppUser getUser(String username);
     List<City> getCitiesOfTheUser(String token);
 }

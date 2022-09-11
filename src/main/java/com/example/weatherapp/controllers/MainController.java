@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -62,6 +63,19 @@ public class MainController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are missing one of the city's attribute", e);
         }
         return "City is add";
+    }
+
+    @DeleteMapping("users/cities/delete")
+    public String deleteCity(@RequestHeader (value = HttpHeaders.AUTHORIZATION, required = false) String token,
+                             @RequestParam(required = false) Integer id){
+        if (token == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized");
+        } else if (id == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Provide an id");
+        }
+            return userService.deleteCityOfUser(token,id);
+
+
     }
 
 }

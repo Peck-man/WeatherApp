@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,8 +69,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (!hasUserCity(appUser, city)){
             appUser.getCities().add(city);
         }
+    }
 
-
+    public String deleteCityOfUser(String token, Integer id){
+        AppUser appUser = userRepo.findByUsername(getUsernameFromToken(token));
+        List<City> userCities = appUser.getCities();
+        for (int i = 0; i < userCities.size(); i++) {
+            if (Objects.equals(userCities.get(i).getId(), id)) {
+                userCities.remove(i);
+                return "Successfully removed";
+            }
+        }
+        return "You dont have city with this id";
     }
 
     public boolean hasUserCity(AppUser appUser, City city){
