@@ -49,4 +49,13 @@ public class UserController {
         }
         return userService.deleteCityOfUser(token,id);
     }
+    @GetMapping("cities/{id}")
+    public String getInfo(@RequestHeader (value = HttpHeaders.AUTHORIZATION, required = false) String token,
+                          @PathVariable Integer id){
+        if (token == null) {
+            System.out.println("no token");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized");
+        }
+        return userService.getWeatherInfo(token, id);
+    }
 }

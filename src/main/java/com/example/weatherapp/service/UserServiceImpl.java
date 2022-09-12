@@ -2,6 +2,7 @@ package com.example.weatherapp.service;
 
 import com.example.weatherapp.models.AppUser;
 import com.example.weatherapp.models.City;
+import com.example.weatherapp.models.ResponseDTO;
 import com.example.weatherapp.repo.CityRepo;
 import com.example.weatherapp.repo.UserRepo;
 import io.jsonwebtoken.Claims;
@@ -15,8 +16,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,11 +39,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser appUser = userRepo.findByUsername(username);
         if(appUser == null) {
-            log.error("User not found in the database");
             throw new UsernameNotFoundException("User not found in the database");
-        } else {
-            log.info("User found in the database");
-
         }
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
@@ -50,7 +48,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public AppUser saveAppUser(AppUser appUser) {
-        log.info("Saving new user {} to the database", appUser.getUsername());
         return userRepo.save(appUser);
     }
 
@@ -93,6 +90,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         return hasIt;
     }
+    public String getWeatherInfo(String token, Integer id){
+        AppUser appUser = userRepo.findByUsername(getUsernameFromToken(token));
+        City city = cityRepo.findById(id);
+        if (hasUserCity(appUser, city)){
+            WebClient client = WebClient.create();
+            ResponseDTO responseJson = client.get()
+                    .uri("https://api.openweathermap.org/data/2.5/weather?lat="+city.getLat()+"&lon="+city.getLon()+"&appid=a1ebb9c162edc980a0a887eb279eca22")
+                    .exchange()
+                    .block()
+                    .bodyToMono(ResponseDTO.class)
+                    .block();
+            String currentTemp = String.valueOf(responseJson.getMain().getTemp()-273);
+            return "In " +  responseJson.getName() + " is currently " + currentTemp + " celsia.";
+        }
+        return "You dont have city with this id";
+    }
 
     @Override
     public AppUser getUser(String username) {
@@ -114,5 +127,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Claims body = claimsJws.getBody();
         return body.getSubject();
     }
+
+
 
 }

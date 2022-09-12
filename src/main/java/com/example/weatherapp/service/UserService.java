@@ -12,4 +12,6 @@ public interface UserService {
     String deleteCityOfUser(String token, Integer idOfCity);
     AppUser getUser(String username);
     List<City> getCitiesOfTheUser(String token);
+
+    String getWeatherInfo(String token, Integer id);
 }

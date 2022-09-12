@@ -15,11 +15,11 @@ public class City {
     @Column(nullable = false)
     private String cityName;
     @Column(nullable = false)
-    private Integer lat;
+    private float lat;
     @Column(nullable = false)
-    private Integer lon;
+    private float lon;
 
-    public City(String cityName, Integer lat, Integer lon) {
+    public City(String cityName, float lat, float lon) {
         this.cityName = cityName;
         this.lat = lat;
         this.lon = lon;
