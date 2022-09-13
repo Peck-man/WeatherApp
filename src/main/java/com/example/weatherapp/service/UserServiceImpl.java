@@ -90,19 +90,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         return hasIt;
     }
-    public String getWeatherInfo(String token, Integer id){
+    public String weatherInfoRequest(String token, Integer id){
         AppUser appUser = userRepo.findByUsername(getUsernameFromToken(token));
         City city = cityRepo.findById(id);
         if (hasUserCity(appUser, city)){
-            WebClient client = WebClient.create();
-            ResponseDTO responseJson = client.get()
-                    .uri("https://api.openweathermap.org/data/2.5/weather?lat="+city.getLat()+"&lon="+city.getLon()+"&appid=a1ebb9c162edc980a0a887eb279eca22")
-                    .exchange()
-                    .block()
-                    .bodyToMono(ResponseDTO.class)
-                    .block();
-            String currentTemp = String.valueOf(responseJson.getMain().getTemp()-273);
-            return "In " +  responseJson.getName() + " is currently " + currentTemp + " celsia.";
+          return getWeatherInfo(city);
         }
         return "You dont have city with this id";
     }
@@ -128,6 +120,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return body.getSubject();
     }
 
+    public String getWeatherInfo(City city){
+        WebClient client = WebClient.create();
+        ResponseDTO responseJson = client.get()
+                .uri("https://api.openweathermap.org/data/2.5/weather?lat="+city.getLat()+"&lon="+city.getLon()+"&appid=a1ebb9c162edc980a0a887eb279eca22")
+                .exchange()
+                .block()
+                .bodyToMono(ResponseDTO.class)
+                .block();
+        String currentTemp = String.valueOf(responseJson.getMain().getTemp()-273);
+        return "In " +  responseJson.getName() + " is currently " + currentTemp + " celsia.";
+    }
 
 
 }

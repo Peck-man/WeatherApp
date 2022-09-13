@@ -13,5 +13,6 @@ public interface UserService {
     AppUser getUser(String username);
     List<City> getCitiesOfTheUser(String token);
 
-    String getWeatherInfo(String token, Integer id);
+    String getWeatherInfo(City city);
+    String weatherInfoRequest(String token, Integer id);
 }

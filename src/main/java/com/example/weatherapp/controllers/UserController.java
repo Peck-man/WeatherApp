@@ -56,6 +56,6 @@ public class UserController {
             System.out.println("no token");
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized");
         }
-        return userService.getWeatherInfo(token, id);
+        return userService.weatherInfoRequest(token, id);
     }
 }
