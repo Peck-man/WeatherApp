@@ -1,5 +1,6 @@
 package com.example.weatherapp.controllers;
 
+import com.example.weatherapp.customExceptions.IncorrectValueException;
 import com.example.weatherapp.models.City;
 import com.example.weatherapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +29,18 @@ public class UserController {
     @PostMapping("cities/add")
     public String addCityToUser(@RequestHeader (value = HttpHeaders.AUTHORIZATION, required = false) String token,
                                 @RequestBody City city){
+        if (token == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized");
+        }
         try {
             city = userService.saveCity(city);
-            userService.addCityToUser(token, city);
+            return userService.addCityToUser(token, city);
         } catch (NullPointerException e){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized", e);
-        } catch (PropertyValueException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are missing one of the city's attribute", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You didnt provide all of the data");
+        } catch (IncorrectValueException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-        return "City is add";
+
     }
 
     @DeleteMapping("cities/delete")
@@ -53,7 +57,6 @@ public class UserController {
     public String getInfo(@RequestHeader (value = HttpHeaders.AUTHORIZATION, required = false) String token,
                           @PathVariable Integer id){
         if (token == null) {
-            System.out.println("no token");
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized");
         }
         return userService.weatherInfoRequest(token, id);

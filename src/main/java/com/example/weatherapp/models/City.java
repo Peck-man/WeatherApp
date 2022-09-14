@@ -15,9 +15,9 @@ public class City {
     @Column(nullable = false)
     private String cityName;
     @Column(nullable = false)
-    private float lat;
+    private Float lat;
     @Column(nullable = false)
-    private float lon;
+    private Float lon;
 
     public City(String cityName, float lat, float lon) {
         this.cityName = cityName;

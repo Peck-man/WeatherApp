@@ -36,7 +36,6 @@ public class JwtTokenVerifier  extends OncePerRequestFilter {
         String token = null;
         try {
             token = authorizationHeader.replace("Bearer ", "");
-            System.out.println(token);
             Jws<Claims> claimsJws = Jwts.parser()
                     .setSigningKey(Keys.hmacShaKeyFor("hellohellohellohellohellohellohellohellohellohellohellohellohello".getBytes()))
                     .parseClaimsJws(token);

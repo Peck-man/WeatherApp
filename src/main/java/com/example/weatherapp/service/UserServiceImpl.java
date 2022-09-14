@@ -1,5 +1,6 @@
 package com.example.weatherapp.service;
 
+import com.example.weatherapp.customExceptions.IncorrectValueException;
 import com.example.weatherapp.models.AppUser;
 import com.example.weatherapp.models.City;
 import com.example.weatherapp.models.ResponseDTO;
@@ -17,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -52,7 +52,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public City saveCity(City city) {
+    public City saveCity(City city) throws IncorrectValueException {
+        if (city.getLat()< -90 || city.getLat() > 90 || city.getLon()< -180 || city.getLon() > 180){
+            throw new IncorrectValueException("You provided values in bad range");
+        }
         if (cityRepo.existsByCityName(city.getCityName())) {
             return cityRepo.findByCityName(city.getCityName());
         }
@@ -61,11 +64,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void addCityToUser(String token, City city) {
+    public String addCityToUser(String token, City city) {
         AppUser appUser = userRepo.findByUsername(getUsernameFromToken(token));
         if (!hasUserCity(appUser, city)){
             appUser.getCities().add(city);
+            return "City is add";
         }
+        return "City is already in the list";
     }
 
     public String deleteCityOfUser(String token, Integer id){
