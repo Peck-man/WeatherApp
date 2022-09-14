@@ -98,10 +98,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public String weatherInfoRequest(String token, Integer id){
         AppUser appUser = userRepo.findByUsername(getUsernameFromToken(token));
         City city = cityRepo.findById(id);
-        if (hasUserCity(appUser, city)){
-          return getWeatherInfo(city);
+        if (city == null || !hasUserCity(appUser, city) ){
+            return "You dont have city with this id";
         }
-        return "You dont have city with this id";
+        return getWeatherInfo(city);
     }
 
     @Override
