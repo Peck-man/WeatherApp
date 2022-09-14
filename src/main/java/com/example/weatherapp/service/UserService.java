@@ -16,4 +16,5 @@ public interface UserService {
 
     String getWeatherInfo(City city);
     String weatherInfoRequest(String token, Integer id);
+    String userRegister(AppUser appUser);
 }
