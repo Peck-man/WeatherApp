@@ -44,7 +44,7 @@ public class JwtUsernameAndPasswordAuthFilter extends UsernamePasswordAuthentica
                 .claim("authorities", authResult.getAuthorities())
                 .setIssuedAt(new Date())
                 .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
-                .signWith(Keys.hmacShaKeyFor("hellohellohellohellohellohellohellohellohellohellohellohellohello".getBytes()))
+                .signWith(Keys.hmacShaKeyFor(System.getenv("SECRET_KEY").getBytes()))
                 .compact();
 
         response.addHeader("Authorization", "Bearer " + token);

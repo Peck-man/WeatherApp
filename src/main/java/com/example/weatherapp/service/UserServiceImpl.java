@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public String getWeatherInfo(City city){
         WebClient client = WebClient.create();
         ResponseDTO responseJson = client.get()
-                .uri("https://api.openweathermap.org/data/2.5/weather?lat="+city.getLat()+"&lon="+city.getLon()+"&appid=a1ebb9c162edc980a0a887eb279eca22")
+                .uri("https://api.openweathermap.org/data/2.5/weather?lat="+city.getLat()+"&lon="+city.getLon()+"&appid=" + System.getenv("WEATHER_KEY"))
                 .exchange()
                 .block()
                 .bodyToMono(ResponseDTO.class)
