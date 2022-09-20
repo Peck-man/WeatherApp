@@ -4,7 +4,6 @@ import com.example.weatherapp.customExceptions.IncorrectValueException;
 import com.example.weatherapp.models.City;
 import com.example.weatherapp.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

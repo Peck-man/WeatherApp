@@ -10,7 +10,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,11 +25,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-@Service  @Transactional @Slf4j
+@Service  @Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepo userRepo;
     private final CityRepo cityRepo;
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
 
     public UserServiceImpl(UserRepo userRepo, CityRepo cityRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
@@ -106,6 +106,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         return hasIt;
     }
+
+    @Override
+    public List<AppUser> getAllUsers() {
+        return userRepo.findAll();
+    }
+
     public String weatherInfoRequest(String token, Integer id){
         AppUser appUser = userRepo.findByUsername(getUsernameFromToken(token));
         City city = cityRepo.findById(id);
@@ -130,7 +136,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public String getUsernameFromToken(String token) {
          token = token.replace("Bearer ", "");
         Jws<Claims> claimsJws = Jwts.parser()
-                .setSigningKey(Keys.hmacShaKeyFor("hellohellohellohellohellohellohellohellohellohellohellohellohello".getBytes()))
+                .setSigningKey(Keys.hmacShaKeyFor(System.getenv("SECRET_KEY").getBytes()))
                 .parseClaimsJws(token);
         Claims body = claimsJws.getBody();
         return body.getSubject();
