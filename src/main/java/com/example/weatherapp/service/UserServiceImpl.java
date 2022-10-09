@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.transaction.Transactional;
@@ -144,14 +145,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     public String getWeatherInfo(City city){
         WebClient client = WebClient.create();
-        ResponseDTO responseJson = client.get()
+        ClientResponse responseJson = client.get()
                 .uri("https://api.openweathermap.org/data/2.5/weather?lat="+city.getLat()+"&lon="+city.getLon()+"&appid=" + System.getenv("WEATHER_KEY"))
                 .exchange()
-                .block()
+                .block();
+        ResponseDTO responseDTO = responseJson
                 .bodyToMono(ResponseDTO.class)
                 .block();
-        String currentTemp = String.valueOf(responseJson.getMain().getTemp()-273);
-        return "In " +  responseJson.getName() + " is currently " + currentTemp + " celsia.";
+        System.out.println(responseJson);
+        String currentTemp = String.valueOf(responseDTO.getMain().getTemp()-273);
+        return "In " +  responseDTO.getName() + " is currently " + currentTemp + " celsia.";
     }
 
 

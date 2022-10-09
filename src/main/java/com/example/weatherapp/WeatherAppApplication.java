@@ -30,11 +30,8 @@ public class WeatherAppApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		userService.saveAppUser(new AppUser("John", passwordEncoder.encode("John1234")));
-		userService.saveAppUser(new AppUser("Simon", passwordEncoder.encode("John1234")));
-		userService.saveAppUser(new AppUser("Emily", passwordEncoder.encode("John1234")));
-		userService.saveCity(new City("Benešov", 49.78f, 14.68f));
-		userService.saveCity(new City("Strašín", 50.00f, 14.70f));
-		userService.saveCity(new City("Středokluky", 50.13f, 14.23f));
+		//userService.saveAppUser(new AppUser("John", passwordEncoder.encode("John1234")));
+		//userService.saveAppUser(new AppUser("Simon", passwordEncoder.encode("John1234")));
+		//userService.saveAppUser(new AppUser("Emily", passwordEncoder.encode("John1234")));
 	}
 }
