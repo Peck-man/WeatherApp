@@ -1,13 +1,15 @@
 package com.example.weatherapp.models;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity @Data @NoArgsConstructor
+@Entity @Getter @Setter
+@NoArgsConstructor
 public class AppUser {
     @Id
     @SequenceGenerator(name = "appUserGenerator", sequenceName = "USER_SEQUENCE", allocationSize = 1)

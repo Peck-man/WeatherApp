@@ -1,12 +1,14 @@
 package com.example.weatherapp.models;
 
-import com.sun.istack.NotNull;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity @Data @NoArgsConstructor
+@Entity @Getter
+@Setter
+@NoArgsConstructor
 public class City {
     @Id
     @SequenceGenerator(name = "cityGenerator", sequenceName = "CITY_SEQUENCE", allocationSize = 1)
